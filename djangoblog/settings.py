@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog', # 注册 blog 应用
     'comments', # 注册新创建的 comments 应用
+    'haystack',# 实现博文的全文检索与关键词高亮显示
 ]
 
 MIDDLEWARE = [
@@ -100,6 +101,17 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+# 全文检索 haystack 的配置
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'blog.whoosh_cn_backend.WhooshEngine',# 指定了 django haystack 使用的搜索引擎
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),# 指定了索引文件需要存放的位置
+    },
+}
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 10#指定如何对搜索结果分页，这里设置为每 10 项结果为一页
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'# 指定什么时候更新索引，这里我们使用 haystack.signals.RealtimeSignalProcessor，作用是每当有文章更新时就更新索引
 
 
 # Internationalization
